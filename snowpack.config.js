@@ -9,6 +9,9 @@ module.exports = {
     '@snowpack/plugin-typescript',
     '@prefresh/snowpack',
   ],
+  alias: {
+    '~': './src',
+  },
   routes: [
     /* Enable an SPA Fallback in development: */
     // {"match": "routes", "src": ".*", "dest": "/index.html"},
