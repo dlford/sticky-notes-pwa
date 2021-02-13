@@ -37,7 +37,7 @@ function App(): JSX.Element {
             <h5>{note.title}</h5>
             <p>{note.content}</p>
             <button
-              onClick={() => deleteNote({ id: note.id as string })}
+              onClick={() => deleteNote({ id: note.id as number })}
             >
               Delete
             </button>

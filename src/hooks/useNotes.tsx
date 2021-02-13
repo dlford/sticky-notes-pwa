@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback } from 'preact/hooks'
 import { openDB, IDBPDatabase, DBSchema } from 'idb'
 
 export interface Note {
-  id?: number | string
+  id?: number
   title: string
   content: string
   updatedAt: Date
@@ -22,7 +22,7 @@ export interface UpdateNoteInput {
 }
 
 export interface DeleteNoteInput {
-  id: number | string
+  id: number
 }
 
 export interface UseNotes {
@@ -40,6 +40,17 @@ interface NotesDB extends DBSchema {
     key: string
     value: Note
   }
+}
+
+// Sorts an array of notes by most recently updated first
+function sortNotes(notes: Note[]): Note[] {
+  return notes.sort((a, b) => {
+    const keyA = new Date(a.updatedAt)
+    const keyB = new Date(b.updatedAt)
+    if (keyA < keyB) return 1
+    if (keyB < keyA) return -1
+    return 0
+  })
 }
 
 export default function useNotes(): UseNotes {
@@ -65,7 +76,9 @@ export default function useNotes(): UseNotes {
     const store = tx.objectStore(tableName)
     const result = await store.getAll()
 
-    setData(result)
+    const sorted = sortNotes(result)
+
+    setData(sorted)
     return true
   }, [db, isDbLoaded])
 
@@ -117,14 +130,32 @@ export default function useNotes(): UseNotes {
     const tx = db.transaction(tableName, 'readwrite')
     const store = tx.objectStore(tableName)
     const updatedAt = new Date(Date.now())
-    await store.put({
+    const idString = await store.put({
       title,
       content,
       updatedAt,
       createdAt: updatedAt,
     })
 
-    await getData()
+    const id = parseInt(idString, 10)
+
+    if (!id || isNaN(id)) {
+      const message = 'createNote error: Failed to insert note'
+      setError((prev) => [...prev, message])
+      return false
+    }
+
+    const newNote: Note = {
+      id,
+      title,
+      content,
+      updatedAt,
+      createdAt: updatedAt,
+    }
+
+    setData((prev) => {
+      return sortNotes([...prev, newNote])
+    })
 
     setLoading(false)
     return true
@@ -146,7 +177,7 @@ export default function useNotes(): UseNotes {
     const tx = db.transaction(tableName, 'readwrite')
     const store = tx.objectStore(tableName)
     const updatedAt = new Date(Date.now())
-    await store.put({
+    const idString = await store.put({
       id,
       title,
       content,
@@ -154,7 +185,30 @@ export default function useNotes(): UseNotes {
       createdAt,
     })
 
-    await getData()
+    const resultId = parseInt(idString, 10)
+
+    if (!resultId || resultId !== id) {
+      const message = 'updateNote error: Failed to update note'
+      setError((prev) => [...prev, message])
+      return false
+    }
+
+    setData((prev) => {
+      return sortNotes(
+        prev.map((note) => {
+          if (note.id === id) {
+            return {
+              id,
+              title,
+              content,
+              updatedAt,
+              createdAt,
+            }
+          }
+          return note
+        }),
+      )
+    })
 
     setLoading(false)
     return true
@@ -172,15 +226,11 @@ export default function useNotes(): UseNotes {
     setLoading(true)
     const tx = db.transaction(tableName, 'readwrite')
     const store = tx.objectStore(tableName)
-    const result = await store.get(id as string)
-    if (!result) {
-      setError((prev) => [...prev, 'deleteNote error: ID not found'])
-      setLoading(false)
-      return false
-    }
-    await store.delete(id as string)
+    await store.delete(IDBKeyRange.only(id))
 
-    await getData()
+    setData((prev) => {
+      return sortNotes(prev.filter((note) => note.id !== id))
+    })
 
     setLoading(false)
     return true
