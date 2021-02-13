@@ -46,7 +46,6 @@ body {
   --gray_500: var(--grey_500);
   --stickynote: #feff9c;
 
-  font-size: var(--baseFontSize);
   width: 100vw;
   height: 100vh;
   max-width: 100%;
@@ -55,10 +54,30 @@ body {
   padding: 0;
   background-color: var(--primary_300);
   color: var(--white);
+  font-size: var(--baseFontSize);
+  font-family: 'Rhodium Libre';
+  /* TODO : Font stacks */
 }
 
 nav {
   font-size: var(--baseNavSize);
+}
+
+.h1,
+h1,
+.h2,
+h2,
+.h3,
+h3,
+.h4,
+h4,
+.h5,
+h5,
+.h6,
+h6,
+.button,
+button {
+  font-family: 'Tienne';
 }
 
 .h1,
@@ -164,15 +183,4 @@ button.bad:hover,
 button.bad:active,
 button.bad:focus {
   background-color: var(--red_400);
-}
-
-form {
-  display: flex;
-  flex-direction: column;
-  max-width: 30rem;
-  margin: 0 auto;
-}
-
-input {
-  margin-bottom: 1rem;
 }

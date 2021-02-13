@@ -25,6 +25,7 @@ function App(): JSX.Element {
 
   return (
     <StyledPage className='App'>
+      <h1>Sticky Notes</h1>
       <form action='post' onSubmit={handleAddNote}>
         <label htmlFor='title'>Title</label>
         <input type='text' name='title' autoComplete='off' />
