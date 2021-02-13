@@ -1,4 +1,6 @@
 import { h, JSX } from 'preact'
+import { styled } from 'goober'
+
 import useNotes from '~/hooks/useNotes'
 
 function App(): JSX.Element {
@@ -22,14 +24,15 @@ function App(): JSX.Element {
   }
 
   return (
-    <div className='App'>
-      {loading && <p>Loading...</p>}
+    <StyledPage className='App'>
       <form action='post' onSubmit={handleAddNote}>
         <label htmlFor='title'>Title</label>
-        <input type='text' name='title' />
+        <input type='text' name='title' autoComplete='off' />
         <label htmlFor='content'>Content</label>
-        <input type='text' name='content' />
-        <button type='submit'>Add Note</button>
+        <input type='text' name='content' autoComplete='off' />
+        <button className='primary' type='submit'>
+          Add Note
+        </button>
       </form>
       {!loading && !!data?.length ? (
         data.map((note) => (
@@ -37,6 +40,7 @@ function App(): JSX.Element {
             <h5>{note.title}</h5>
             <p>{note.content}</p>
             <button
+              className='bad'
               onClick={() => deleteNote({ id: note.id as number })}
             >
               Delete
@@ -46,9 +50,17 @@ function App(): JSX.Element {
       ) : (
         <p>No notes found...</p>
       )}
+      {loading && <p>Loading...</p>}
       {!!error?.length && <p>{JSON.stringify(error)}</p>}
-    </div>
+    </StyledPage>
   )
 }
 
 export default App
+
+const StyledPage = styled('main')`
+  width: 60rem;
+  max-width: 100%;
+  margin: 0 auto;
+  padding: 1rem;
+`

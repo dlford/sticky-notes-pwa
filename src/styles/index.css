@@ -19,16 +19,31 @@ body {
   --primary_300: #232750;
   --primary_400: #13173b;
   --primary_500: #070925;
-  --accent1_100: #e3fae6;
-  --accent1_200: #b9eebf;
-  --accent1_300: #8cdc96;
-  --accent1_400: #62c66e;
-  --accent1_500: #3da84a;
-  --accent2_100: #aed9ec;
-  --accent2_200: #7ab9d5;
-  --accent2_300: #519bbb;
-  --accent2_400: #327fa0;
-  --accent2_500: #176e94;
+  --accent_100: #aed9ec;
+  --accent_200: #7ab9d5;
+  --accent_300: #519bbb;
+  --accent_400: #327fa0;
+  --accent_500: #176e94;
+  --green_100: #e3fae6;
+  --green_200: #b9eebf;
+  --green_300: #8cdc96;
+  --green_400: #62c66e;
+  --green_500: #3da84a;
+  --red_100: #ffc9c9;
+  --red_200: #ff9e9e;
+  --red_300: #ff7979;
+  --red_400: #f95656;
+  --red_500: #de2f2f;
+  --grey_100: #f6f9fd;
+  --grey_200: #dee5ef;
+  --grey_300: #73839c;
+  --grey_400: #293854;
+  --grey_500: #112138;
+  --gray_100: var(--grey_100);
+  --gray_200: var(--grey_200);
+  --gray_300: var(--grey_300);
+  --gray_400: var(--grey_400);
+  --gray_500: var(--grey_500);
   --stickynote: #feff9c;
 
   font-size: var(--baseFontSize);
@@ -100,20 +115,61 @@ small {
 
 .button,
 button {
-  background-color: var(--accent1_500);
-  color: var(--white);
+  background-color: var(--accent_500);
+  color: var(--grey_100);
   border: none;
   border-radius: 0.25rem;
   padding: 0.5rem 0.6rem 0.6rem;
   font-weight: bold;
   text-transform: uppercase;
   letter-spacing: 0.1rem;
+  cursor: pointer;
+  transition: color 300ms ease-in-out,
+    background-color 50ms ease-in-out;
+}
+
+.button:hover,
+.button:active,
+.button:focus,
+button:hover,
+button:active,
+button:focus {
+  background-color: var(--accent_400);
+  color: var(--grey_500);
+}
+
+.button.primary,
+button.primary {
+  background-color: var(--green_500);
+}
+
+.button.primary:hover,
+.button.primary:active,
+.button.primary:focus,
+button.primary:hover,
+button.primary:active,
+button.primary:focus {
+  background-color: var(--green_400);
+}
+
+.button.bad,
+button.bad {
+  background-color: var(--red_500);
+}
+
+.button.bad:hover,
+.button.bad:active,
+.button.bad:focus,
+button.bad:hover,
+button.bad:active,
+button.bad:focus {
+  background-color: var(--red_400);
 }
 
 form {
   display: flex;
   flex-direction: column;
-  width: 30rem;
+  max-width: 30rem;
   margin: 0 auto;
 }
 
