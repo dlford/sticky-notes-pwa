@@ -3,7 +3,6 @@ import { setup } from 'goober'
 import 'preact/devtools'
 
 import App from './App.js'
-import './index.css'
 
 setup(h)
 

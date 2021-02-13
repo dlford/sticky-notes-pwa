@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "goober": "^2.0.30",
+    "idb": "^6.0.0",
     "preact": "^10.0.0"
   },
   "devDependencies": {
