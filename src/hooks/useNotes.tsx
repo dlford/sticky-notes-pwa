@@ -33,6 +33,7 @@ export interface UseNotes {
   createNote(arg0: CreateNoteInput): Promise<boolean>
   updateNote(arg0: UpdateNoteInput): Promise<boolean>
   deleteNote(arg0: DeleteNoteInput): Promise<boolean>
+  refetch(): void
 }
 
 interface NotesDB extends DBSchema {
@@ -236,6 +237,10 @@ export default function useNotes(): UseNotes {
     return true
   }
 
+  function refetch() {
+    getData()
+  }
+
   return {
     isDbLoaded,
     data,
@@ -244,5 +249,6 @@ export default function useNotes(): UseNotes {
     createNote,
     updateNote,
     deleteNote,
+    refetch,
   }
 }

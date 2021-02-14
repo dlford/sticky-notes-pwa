@@ -1,10 +1,24 @@
 import { h, JSX } from 'preact'
 import { styled } from 'goober'
 
+import AddNote from '~/components/AddNote'
 import useNotes from '~/hooks/useNotes'
+import useModal from '~/hooks/useModal'
 
 function App(): JSX.Element {
-  const { loading, data, error, createNote, deleteNote } = useNotes()
+  const {
+    loading,
+    data,
+    error,
+    createNote,
+    deleteNote,
+    refetch,
+  } = useNotes()
+  const { isOpen, open } = useModal({
+    onClose: refetch,
+    modalRootId: 'ADD_NOTE_MODAL',
+    children: <AddNote />,
+  })
 
   function handleAddNote(
     event: JSX.TargetedEvent<HTMLFormElement, Event>,
@@ -26,6 +40,9 @@ function App(): JSX.Element {
   return (
     <StyledPage className='App'>
       <h1>Sticky Notes</h1>
+      <h2>{isOpen}</h2>
+      <button onClick={open}>Open Modal</button>
+      <button onClick={close}>Close Modal</button>
       <form action='post' onSubmit={handleAddNote}>
         <label htmlFor='title'>Title</label>
         <input type='text' name='title' autoComplete='off' />

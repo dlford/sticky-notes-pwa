@@ -1,6 +1,7 @@
 import { h, render } from 'preact'
 import { setup } from 'goober'
 import 'preact/devtools'
+import 'wicg-inert'
 import '@fontsource/swanky-and-moo-moo'
 import '@fontsource/rhodium-libre'
 import '@fontsource/tienne'
