@@ -8,10 +8,12 @@ import '@fontsource/tienne'
 
 import '~/styles/normalize.css'
 import '~/styles/index.css'
+import { setupDB } from '~/lib/database'
 
 import App from './App.js'
 
 setup(h)
+setupDB()
 
 const root = document.getElementById('root')
 
