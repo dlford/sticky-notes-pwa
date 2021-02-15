@@ -1,10 +1,5 @@
 import { h, JSX, createContext } from 'preact'
-import {
-  useState,
-  useContext,
-  useEffect,
-  useCallback,
-} from 'preact/hooks'
+import { useState, useEffect, useCallback } from 'preact/hooks'
 
 import { openDB, IDBPDatabase, DBSchema } from 'idb'
 
@@ -32,7 +27,14 @@ export interface DeleteNoteInput {
   id: number
 }
 
-export interface UseNotes {
+interface NotesDB extends DBSchema {
+  notes: {
+    key: string
+    value: Note
+  }
+}
+
+export interface NotesConsumerProps {
   isDbLoaded: boolean
   data: Note[]
   loading: boolean
@@ -42,26 +44,23 @@ export interface UseNotes {
   deleteNote(arg0: DeleteNoteInput): Promise<boolean>
 }
 
-interface NotesDB extends DBSchema {
-  notes: {
-    key: string
-    value: Note
-  }
-}
-
-export interface NotesConsumerProps {
-  data: Note[]
-  setData(arg0: Note[]): void
-}
-
 export interface NotesProviderProps {
   children: JSX.Element | JSX.Element[]
 }
 
 export const NotesContext = createContext<NotesConsumerProps>({
   data: [],
-  setData() {
-    return
+  isDbLoaded: false,
+  loading: true,
+  error: [],
+  createNote: () => {
+    return new Promise((resolve) => resolve(false))
+  },
+  updateNote: () => {
+    return new Promise((resolve) => resolve(false))
+  },
+  deleteNote: () => {
+    return new Promise((resolve) => resolve(false))
   },
 })
 
@@ -69,21 +68,6 @@ export function NotesProvider({
   children,
 }: NotesProviderProps): JSX.Element {
   const [data, setData] = useState<Note[]>([])
-
-  return (
-    <NotesContext.Provider
-      value={{
-        data,
-        setData,
-      }}
-    >
-      {children}
-    </NotesContext.Provider>
-  )
-}
-
-export default function useNotes(): UseNotes {
-  const { data, setData } = useContext(NotesContext)
   const [db, setDb] = useState<IDBPDatabase<NotesDB> | void>(
     undefined,
   )
@@ -274,13 +258,21 @@ export default function useNotes(): UseNotes {
     return true
   }
 
-  return {
-    isDbLoaded,
-    data,
-    loading,
-    error,
-    createNote,
-    updateNote,
-    deleteNote,
-  }
+  return (
+    <NotesContext.Provider
+      value={{
+        isDbLoaded,
+        data,
+        loading,
+        error,
+        createNote,
+        updateNote,
+        deleteNote,
+      }}
+    >
+      {children}
+    </NotesContext.Provider>
+  )
 }
+
+export default NotesContext

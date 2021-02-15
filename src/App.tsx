@@ -30,14 +30,12 @@ function App(): JSX.Element {
 export default App
 
 const StyledPage = styled('main')`
-  width: 60rem;
-  max-width: 100%;
+  max-width: 60rem;
   margin: 0 auto;
-  padding: 0.5rem;
+  padding: 1rem;
 `
 
 const Navbar = styled('nav')`
-  margin: 0 1rem 0 0;
   display: flex;
   justify-content: space-between;
   align-items: center;

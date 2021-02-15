@@ -1,14 +1,17 @@
 import { h, Fragment, JSX } from 'preact'
+import { useContext } from 'preact/hooks'
 
-import useNotes from '~/context/Notes'
+import NotesContext, { Note } from '~/context/Notes'
 
 export default function NoteList(): JSX.Element {
-  const { data, loading, error, deleteNote } = useNotes()
+  const { data, loading, error, deleteNote } = useContext(
+    NotesContext,
+  )
 
   return (
     <Fragment>
       {!loading && !!data?.length ? (
-        data.map((note) => (
+        data.map((note: Note) => (
           <div key={note.id}>
             <h5>{note.title}</h5>
             <p>{note.content}</p>

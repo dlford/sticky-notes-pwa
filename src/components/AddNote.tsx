@@ -1,10 +1,11 @@
 import { h, JSX } from 'preact'
+import { useContext } from 'preact/hooks'
 
-import useNotes from '~/context/Notes'
+import NotesContext from '~/context/Notes'
 import useModal from '~/hooks/useModal'
 
 export default function AddNote(): JSX.Element {
-  const { createNote } = useNotes()
+  const { createNote } = useContext(NotesContext)
   const { close } = useModal({ modalRootId: 'ADD_NOTE_MODAL' })
 
   function handleAddNote(
