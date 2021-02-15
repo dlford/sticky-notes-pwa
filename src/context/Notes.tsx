@@ -1,4 +1,11 @@
-import { useState, useEffect, useCallback } from 'preact/hooks'
+import { h, JSX, createContext } from 'preact'
+import {
+  useState,
+  useContext,
+  useEffect,
+  useCallback,
+} from 'preact/hooks'
+
 import { openDB, IDBPDatabase, DBSchema } from 'idb'
 
 export interface Note {
@@ -42,28 +49,62 @@ interface NotesDB extends DBSchema {
   }
 }
 
-// Sorts an array of notes by most recently updated first
-function sortNotes(notes: Note[]): Note[] {
-  return notes.sort((a, b) => {
-    const keyA = new Date(a.updatedAt)
-    const keyB = new Date(b.updatedAt)
-    if (keyA < keyB) return 1
-    if (keyB < keyA) return -1
-    return 0
-  })
+export interface NotesConsumerProps {
+  data: Note[]
+  setData(arg0: Note[]): void
+}
+
+export interface NotesProviderProps {
+  children: JSX.Element | JSX.Element[]
+}
+
+export const NotesContext = createContext<NotesConsumerProps>({
+  data: [],
+  setData() {
+    return
+  },
+})
+
+export function NotesProvider({
+  children,
+}: NotesProviderProps): JSX.Element {
+  const [data, setData] = useState<Note[]>([])
+
+  return (
+    <NotesContext.Provider
+      value={{
+        data,
+        setData,
+      }}
+    >
+      {children}
+    </NotesContext.Provider>
+  )
 }
 
 export default function useNotes(): UseNotes {
+  const { data, setData } = useContext(NotesContext)
   const [db, setDb] = useState<IDBPDatabase<NotesDB> | void>(
     undefined,
   )
   const [isDbLoaded, setIsDbLoaded] = useState(false)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<unknown[]>([])
-  const [data, setData] = useState<Note[]>([])
+
   const dbName = 'stickyNotes'
   const dbVersion = 1
   const tableName = 'notes'
+
+  // Sorts an array of notes by most recently updated first
+  function sortNotes(notes: Note[]): Note[] {
+    return notes.sort((a, b) => {
+      const keyA = new Date(a.updatedAt)
+      const keyB = new Date(b.updatedAt)
+      if (keyA < keyB) return 1
+      if (keyB < keyA) return -1
+      return 0
+    })
+  }
 
   const getData = useCallback(async (): Promise<boolean> => {
     if (!db || !isDbLoaded) {
@@ -80,7 +121,7 @@ export default function useNotes(): UseNotes {
 
     setData(sorted)
     return true
-  }, [db, isDbLoaded])
+  }, [db, isDbLoaded, setData])
 
   // Connect to indexedDB on load
   useEffect(() => {
@@ -153,9 +194,8 @@ export default function useNotes(): UseNotes {
       createdAt: updatedAt,
     }
 
-    setData((prev) => {
-      return sortNotes([...prev, newNote])
-    })
+    const newData = sortNotes([...data, newNote])
+    setData(newData)
 
     setLoading(false)
     return true
@@ -193,22 +233,21 @@ export default function useNotes(): UseNotes {
       return false
     }
 
-    setData((prev) => {
-      return sortNotes(
-        prev.map((note) => {
-          if (note.id === id) {
-            return {
-              id,
-              title,
-              content,
-              updatedAt,
-              createdAt,
-            }
+    const newData = sortNotes(
+      data.map((note) => {
+        if (note.id === id) {
+          return {
+            id,
+            title,
+            content,
+            updatedAt,
+            createdAt,
           }
-          return note
-        }),
-      )
-    })
+        }
+        return note
+      }),
+    )
+    setData(newData)
 
     setLoading(false)
     return true
@@ -228,9 +267,8 @@ export default function useNotes(): UseNotes {
     const store = tx.objectStore(tableName)
     await store.delete(IDBKeyRange.only(id))
 
-    setData((prev) => {
-      return sortNotes(prev.filter((note) => note.id !== id))
-    })
+    const newData = sortNotes(data.filter((note) => note.id !== id))
+    setData(newData)
 
     setLoading(false)
     return true

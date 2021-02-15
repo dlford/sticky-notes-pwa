@@ -4,7 +4,6 @@ import { useState } from 'preact/hooks'
 export interface UseModalProps {
   appRootId?: string
   modalRootId?: string
-  onClose?(): unknown
   children?: JSX.Element
 }
 
@@ -17,7 +16,6 @@ export interface UseModal {
 export default function useModal({
   appRootId = 'root',
   modalRootId = 'modal',
-  onClose,
   children,
 }: UseModalProps): UseModal {
   const [isOpen, setIsOpen] = useState(false)
@@ -68,7 +66,6 @@ export default function useModal({
       modalRoot.style.display = 'none'
       window.removeEventListener('keydown', handleEscapeKeyPress)
       setIsOpen(false)
-      !!onClose && onClose()
     }
   }
 

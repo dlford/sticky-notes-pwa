@@ -1,6 +1,6 @@
 import { h, JSX } from 'preact'
 
-import useNotes from '~/hooks/useNotes'
+import useNotes from '~/context/Notes'
 import useModal from '~/hooks/useModal'
 
 export default function AddNote(): JSX.Element {
