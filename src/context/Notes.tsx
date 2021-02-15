@@ -26,20 +26,7 @@ export interface NotesProviderProps {
   children: JSX.Element | JSX.Element[]
 }
 
-export const NotesContext = createContext<NotesConsumerProps>({
-  data: [],
-  loading: true,
-  error: [],
-  createNote: () => {
-    return new Promise((resolve) => resolve(false))
-  },
-  updateNote: () => {
-    return new Promise((resolve) => resolve(false))
-  },
-  deleteNote: () => {
-    return new Promise((resolve) => resolve(false))
-  },
-})
+let NotesContext
 
 export function NotesProvider({
   children,
@@ -54,23 +41,44 @@ export function NotesProvider({
       .catch(() => setLoading(false))
   }, [])
 
+  async function createNote({ title, content }): Promise<boolean> {
+    setLoading(true)
+    const result = await createNote({ title, content })
+    if (result.success && !!result?.payload?.note) {
+      setData((prev) => {
+        sortNotes([...prev, result.payload.note])
+      })
+    }
+    setLoading(false)
+    return true
+  }
+
+  async function updateNote(): Promise<boolean> {
+    return new Promise((resolve) => resolve(false))
+  }
+
+  async function deleteNote(): Promise<boolean> {
+    return new Promise((resolve) => resolve(false))
+  }
+
+  NotesContext = createContext<NotesConsumerProps>({
+    data: [],
+    loading: true,
+    error: [],
+    createNote,
+    updateNote,
+    deleteNote,
+  })
+
   return (
     <NotesContext.Provider
       value={{
         data,
         loading,
         error,
-        createNote: async ({ title, content }) => {
-          setLoading(true)
-          const result = await createNote({ title, content })
-          if (result.success && !!result?.payload?.note) {
-            setData((prev) => {
-              sortNotes([...prev, result.payload.note])
-            })
-          }
-          setLoading(false)
-          return true
-        },
+        createNote,
+        updateNote,
+        deleteNote,
       }}
     >
       {children}
