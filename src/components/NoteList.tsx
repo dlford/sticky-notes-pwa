@@ -20,7 +20,6 @@ export default function NoteList({
       {!loading && !!data?.length ? (
         data.map((note: Note) => (
           <div key={note.id}>
-            <h5>{note.title}</h5>
             <p>{note.content}</p>
             <button
               className='bad'

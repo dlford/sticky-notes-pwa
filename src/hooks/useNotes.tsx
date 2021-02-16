@@ -3,20 +3,17 @@ import { openDB, IDBPDatabase, DBSchema } from 'idb'
 
 export interface Note {
   id?: number
-  title: string
   content: string
   updatedAt: Date
   createdAt: Date
 }
 
 export interface CreateNoteInput {
-  title: Note['title']
   content: Note['content']
 }
 
 export interface UpdateNoteInput {
   id: Note['id']
-  title: Note['title']
   content: Note['content']
   createdAt: Note['createdAt']
 }
@@ -117,7 +114,6 @@ export default function useNotes(): UseNotes {
   }, [db, isDbLoaded, getData])
 
   async function createNote({
-    title,
     content,
   }: CreateNoteInput): Promise<boolean> {
     if (!db || !isDbLoaded) {
@@ -131,7 +127,6 @@ export default function useNotes(): UseNotes {
     const store = tx.objectStore(tableName)
     const updatedAt = new Date(Date.now())
     const idString = await store.put({
-      title,
       content,
       updatedAt,
       createdAt: updatedAt,
@@ -147,7 +142,6 @@ export default function useNotes(): UseNotes {
 
     const newNote: Note = {
       id,
-      title,
       content,
       updatedAt,
       createdAt: updatedAt,
@@ -163,7 +157,6 @@ export default function useNotes(): UseNotes {
 
   async function updateNote({
     id,
-    title,
     content,
     createdAt,
   }: UpdateNoteInput): Promise<boolean> {
@@ -179,7 +172,6 @@ export default function useNotes(): UseNotes {
     const updatedAt = new Date(Date.now())
     const idString = await store.put({
       id,
-      title,
       content,
       updatedAt,
       createdAt,
@@ -199,7 +191,6 @@ export default function useNotes(): UseNotes {
           if (note.id === id) {
             return {
               id,
-              title,
               content,
               updatedAt,
               createdAt,
