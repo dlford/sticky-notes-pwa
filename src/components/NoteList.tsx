@@ -1,4 +1,5 @@
 import { h, Fragment, JSX } from 'preact'
+import { styled } from 'goober'
 
 import type { UseNotes, Note } from '~/hooks/useNotes'
 
@@ -19,7 +20,7 @@ export default function NoteList({
     <Fragment>
       {!loading && !!data?.length ? (
         data.map((note: Note) => (
-          <div key={note.id}>
+          <StyledNote key={note.id}>
             <p>{note.content}</p>
             <button
               className='bad'
@@ -27,7 +28,7 @@ export default function NoteList({
             >
               Delete
             </button>
-          </div>
+          </StyledNote>
         ))
       ) : (
         <p>No notes found...</p>
@@ -37,3 +38,14 @@ export default function NoteList({
     </Fragment>
   )
 }
+
+const StyledNote = styled('div')`
+  background-color: var(--stickynote);
+  color: var(--black);
+  p {
+    margin: 1rem;
+    font-family: 'Swanky and Moo Moo';
+    font-size: var(--heading_2);
+    font-weight: bold;
+  }
+`
