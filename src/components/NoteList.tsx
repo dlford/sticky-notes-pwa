@@ -1,13 +1,20 @@
 import { h, Fragment, JSX } from 'preact'
-import { useContext } from 'preact/hooks'
 
-import NotesContext, { Note } from '~/context/Notes'
+import type { UseNotes, Note } from '~/hooks/useNotes'
 
-export default function NoteList(): JSX.Element {
-  const { data, loading, error, deleteNote } = useContext(
-    NotesContext,
-  )
+export interface NoteListProps {
+  data: UseNotes['data']
+  loading: UseNotes['loading']
+  error: UseNotes['error']
+  deleteNote: UseNotes['deleteNote']
+}
 
+export default function NoteList({
+  data,
+  loading,
+  error,
+  deleteNote,
+}: NoteListProps): JSX.Element {
   return (
     <Fragment>
       {!loading && !!data?.length ? (
