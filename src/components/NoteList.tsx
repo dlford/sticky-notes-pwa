@@ -21,7 +21,7 @@ export default function NoteList({
       {!loading && !!data?.length ? (
         data.map((note: Note) => {
           const { content } = note
-          const limit = 155
+          const limit = 150
 
           const text =
             content.length > limit
