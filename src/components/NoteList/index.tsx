@@ -2,7 +2,7 @@ import { h, JSX } from 'preact'
 import { styled } from 'goober'
 
 import type { UseNotes, Note } from '~/hooks/useNotes'
-import NoteComponent from '~/components/Note'
+import NoteComponent from './Note'
 
 export interface NoteListComponentProps {
   data: UseNotes['data']

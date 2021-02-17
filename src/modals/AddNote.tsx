@@ -3,16 +3,18 @@ import { h, JSX } from 'preact'
 import useModal from '~/hooks/useModal'
 import type { UseNotes } from '~/hooks/useNotes'
 
-export interface AddNoteComponentProps {
+export interface AddNoteModalProps {
   createNote: UseNotes['createNote']
 }
 
-export default function AddNoteComponent({
+// TODO : Limit length, remove limit from Note component
+
+export default function AddNoteModal({
   createNote,
-}: AddNoteComponentProps): JSX.Element {
+}: AddNoteModalProps): JSX.Element {
   const { close } = useModal({ modalRootId: 'ADD_NOTE_MODAL' })
 
-  function handleAddNoteComponent(
+  function handleAddNoteModal(
     event: JSX.TargetedEvent<HTMLFormElement, Event>,
   ) {
     event.preventDefault()
@@ -29,7 +31,7 @@ export default function AddNoteComponent({
   }
 
   return (
-    <form action='post' onSubmit={handleAddNoteComponent}>
+    <form action='post' onSubmit={handleAddNoteModal}>
       <label htmlFor='content'>Content</label>
       <input type='text' name='content' autoComplete='off' />
       <button className='primary' type='submit'>

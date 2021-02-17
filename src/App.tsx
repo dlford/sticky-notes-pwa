@@ -2,7 +2,7 @@ import { h, JSX } from 'preact'
 import { styled } from 'goober'
 
 import useNotes from '~/hooks/useNotes'
-import AddNote from '~/components/AddNote'
+import AddNote from '~/modals/AddNote'
 import useModal from '~/hooks/useModal'
 import NoteList from '~/components/NoteList'
 

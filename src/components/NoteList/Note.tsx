@@ -1,10 +1,13 @@
 import { h, JSX } from 'preact'
 import { styled } from 'goober'
 
-import type { UseNotes, Note } from '~/hooks/useNotes'
-import useConfirmationModal, {
-  UseConfirmationModalProps,
-} from '~/hooks/useConfirmationModal'
+import ConfirmationModal from '~/modals/ConfirmDeleteNote'
+import type {
+  UseNotes,
+  Note,
+  DeleteNoteInput,
+} from '~/hooks/useNotes'
+import useModal from '~/hooks/useModal'
 
 export interface NoteComponentProps {
   id?: Note['id']
@@ -12,20 +15,22 @@ export interface NoteComponentProps {
   deleteNote: UseNotes['deleteNote']
 }
 
-type DeleteModalProps = UseConfirmationModalProps<
-  UseNotes['deleteNote'],
-  number
->
-
 export default function NoteComponent({
   id,
   content,
   deleteNote,
 }: NoteComponentProps): JSX.Element | null {
-  const { open } = useConfirmationModal({
-    payload: id,
-    action: deleteNote,
-    modalRootId: 'CONFIRM_DELETE_NOTE_MODAL',
+  const modalRootId = 'CONFIRM_DELETE_NOTE_MODAL'
+
+  const { open } = useModal({
+    modalRootId,
+    children: (
+      <ConfirmationModal
+        id={id as DeleteNoteInput['id']}
+        deleteNote={deleteNote}
+        modalRootId={modalRootId}
+      />
+    ),
   })
 
   const limit = 150
