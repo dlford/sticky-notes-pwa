@@ -38,7 +38,7 @@ export default function AddNoteModal({
       <label htmlFor='content'>New Note</label>
       <textarea name='content' />
       <button className='primary' type='submit'>
-        Add Note
+        Save
       </button>
     </StyledForm>
   )
@@ -51,6 +51,7 @@ const StyledForm = styled('form')`
   padding: 2rem 3rem;
   border-radius: 1rem;
   textarea {
+    color: var(--black);
     width: 18rem;
     height: 14rem;
     max-width: 80vw;

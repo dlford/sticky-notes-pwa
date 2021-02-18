@@ -25,6 +25,8 @@ export default function useModal({
     throw new Error('Inavlid appRootId supplied to useModal')
   }
 
+  const animationDuration = 200
+
   let modalRoot = document.getElementById(modalRootId)
   if (!modalRoot) {
     modalRoot = document.createElement('div')
@@ -42,7 +44,16 @@ export default function useModal({
     modalRoot.style.height = '100vh'
     modalRoot.style.zIndex = '9'
     modalRoot.style.backgroundColor = 'rgba(0,0,0,45%)'
+    modalRoot.style.opacity = '0'
+    modalRoot.style.transition = `opacity ease-in-out ${animationDuration}ms`
     document.body.appendChild(modalRoot)
+  }
+
+  function handleEscapeKeyPress(event: KeyboardEvent) {
+    const { key } = event
+    if (key === 'Escape') {
+      close()
+    }
   }
 
   function open() {
@@ -54,30 +65,33 @@ export default function useModal({
       modalRoot.style.display = 'flex'
       window.addEventListener('keydown', handleEscapeKeyPress)
       setIsOpen(true)
+      setTimeout(() => {
+        if (modalRoot?.style?.opacity) {
+          modalRoot.style.opacity = '1'
+        }
+      }, 1)
     }
   }
 
   function close() {
     if (modalRoot && appRoot) {
-      appRoot.removeAttribute('aria-hidden')
-      appRoot.removeAttribute('inert')
-      modalRoot.setAttribute('aria-hidden', 'true')
-      modalRoot.setAttribute('inert', 'true')
-      modalRoot.style.display = 'none'
-      window.removeEventListener('keydown', handleEscapeKeyPress)
-      setIsOpen(false)
+      modalRoot.style.opacity = '0'
+      setTimeout(() => {
+        if (modalRoot) {
+          appRoot.removeAttribute('aria-hidden')
+          appRoot.removeAttribute('inert')
+          modalRoot.setAttribute('aria-hidden', 'true')
+          modalRoot.setAttribute('inert', 'true')
+          modalRoot.style.display = 'none'
+          window.removeEventListener('keydown', handleEscapeKeyPress)
+          setIsOpen(false)
+        }
+      }, animationDuration)
     }
   }
 
   if (modalRoot && children) {
     render(children, modalRoot)
-  }
-
-  function handleEscapeKeyPress(event: KeyboardEvent) {
-    const { key } = event
-    if (key === 'Escape') {
-      close()
-    }
   }
 
   return {

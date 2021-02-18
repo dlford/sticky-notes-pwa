@@ -21,7 +21,7 @@ export default function NoteListComponent({
     <StyledNoteList>
       {!loading && !!data?.length ? (
         data.map((note: Note) => (
-          <NoteComponent {...{ ...note, deleteNote }} />
+          <NoteComponent note={note} deleteNote={deleteNote} />
         ))
       ) : (
         <p>No notes found...</p>

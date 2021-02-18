@@ -2,31 +2,26 @@ import { h, JSX } from 'preact'
 import { styled } from 'goober'
 
 import ConfirmationModal from '~/modals/ConfirmDeleteNote'
-import type {
-  UseNotes,
-  Note,
-  DeleteNoteInput,
-} from '~/hooks/useNotes'
+import type { UseNotes, Note } from '~/hooks/useNotes'
 import useModal from '~/hooks/useModal'
 
 export interface NoteComponentProps {
-  id?: Note['id']
-  content: Note['content']
+  note: Note
   deleteNote: UseNotes['deleteNote']
 }
 
 export default function NoteComponent({
-  id,
-  content,
+  note,
   deleteNote,
 }: NoteComponentProps): JSX.Element | null {
   const modalRootId = 'CONFIRM_DELETE_NOTE_MODAL'
+  const { id, content } = note
 
   const { open } = useModal({
     modalRootId,
     children: (
       <ConfirmationModal
-        id={id as DeleteNoteInput['id']}
+        note={note}
         deleteNote={deleteNote}
         modalRootId={modalRootId}
       />

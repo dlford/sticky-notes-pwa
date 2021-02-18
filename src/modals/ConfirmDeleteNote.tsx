@@ -9,17 +9,25 @@ import type {
 import useModal from '~/hooks/useModal'
 
 export interface ConfirmDeleteNoteModalProps {
-  id?: Note['id']
+  note: Note
   deleteNote: UseNotes['deleteNote']
   modalRootId: string
 }
 
 export default function ConfirmDeleteNoteModal({
-  id,
+  note,
   deleteNote,
   modalRootId,
 }: ConfirmDeleteNoteModalProps): JSX.Element {
   const { close } = useModal({ modalRootId })
+  const { id, content } = note
+
+  const limit = 150
+
+  const text =
+    content.length > limit
+      ? `${content.substring(0, limit)}...`
+      : content
 
   async function handleYes() {
     if (id) {
@@ -33,6 +41,7 @@ export default function ConfirmDeleteNoteModal({
       <h1 className='h4'>
         Are you sure you want to delete this note?
       </h1>
+      <div className='note'>{text}</div>
       <div className='buttons'>
         <button className='bad' onClick={handleYes}>
           Yes
@@ -50,6 +59,16 @@ const StyledModal = styled('div')`
   padding: 2rem;
   border-radius: 1rem;
   gap: 2rem;
+  .note {
+    color: var(--black);
+    margin: 0 auto;
+    width: 18rem;
+    height: 14rem;
+    background-color: var(--stickynote);
+    font-family: 'Swanky and Moo Moo';
+    font-size: var(--heading_2);
+    padding: 0.5rem;
+  }
   h1 {
     margin: 0;
   }
