@@ -35,11 +35,17 @@ export default function AddNoteModal({
 
   return (
     <StyledForm action='post' onSubmit={handleAddNote}>
+      <h1 className='h3'>Add Note</h1>
       <label htmlFor='content'>New Note</label>
       <textarea name='content' />
-      <button className='primary' type='submit'>
-        Save
-      </button>
+      <div className='buttons'>
+        <button className='primary' type='submit'>
+          Save
+        </button>
+        <button type='reset' onClick={close} className='bad'>
+          Cancel
+        </button>
+      </div>
     </StyledForm>
   )
 }
@@ -50,6 +56,9 @@ const StyledForm = styled('form')`
   background-color: var(--primary_200);
   padding: 2rem 3rem;
   border-radius: 1rem;
+  h1 {
+    text-align: center;
+  }
   textarea {
     color: var(--black);
     width: 18rem;
@@ -60,9 +69,14 @@ const StyledForm = styled('form')`
     font-family: 'Swanky and Moo Moo';
     font-size: var(--heading_2);
     padding: 0.5rem;
+    margin-bottom: 2rem;
   }
-  button {
-    width: 8rem;
-    margin: 1rem auto 0;
+  .buttons {
+    display: flex;
+    gap: 1rem;
+    margin: 0 auto;
+    button {
+      width: 8rem;
+    }
   }
 `

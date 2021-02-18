@@ -8,17 +8,17 @@ import type {
 } from '~/hooks/useNotes'
 import useModal from '~/hooks/useModal'
 
-export interface ConfirmDeleteNoteModalProps {
+export interface DeleteNoteModalProps {
   note: Note
   deleteNote: UseNotes['deleteNote']
   modalRootId: string
 }
 
-export default function ConfirmDeleteNoteModal({
+export default function DeleteNoteModal({
   note,
   deleteNote,
   modalRootId,
-}: ConfirmDeleteNoteModalProps): JSX.Element {
+}: DeleteNoteModalProps): JSX.Element {
   const { close } = useModal({ modalRootId })
   const { id, content } = note
 
@@ -38,15 +38,13 @@ export default function ConfirmDeleteNoteModal({
 
   return (
     <StyledModal>
-      <h1 className='h4'>
-        Are you sure you want to delete this note?
-      </h1>
+      <h1 className='h3'>Delete Note</h1>
       <div className='note'>{text}</div>
       <div className='buttons'>
         <button className='bad' onClick={handleYes}>
-          Yes
+          Delete
         </button>
-        <button onClick={close}>No</button>
+        <button onClick={close}>Keep</button>
       </div>
     </StyledModal>
   )
@@ -70,6 +68,7 @@ const StyledModal = styled('div')`
     padding: 0.5rem;
   }
   h1 {
+    text-align: center;
     margin: 0;
   }
   .buttons {
@@ -77,7 +76,7 @@ const StyledModal = styled('div')`
     gap: 1rem;
     margin: 0 auto;
     button {
-      width: 5rem;
+      width: 8rem;
     }
   }
 `

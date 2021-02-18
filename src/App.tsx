@@ -7,7 +7,14 @@ import useModal from '~/hooks/useModal'
 import NoteList from '~/components/NoteList'
 
 function App(): JSX.Element {
-  const { data, loading, error, createNote, deleteNote } = useNotes()
+  const {
+    data,
+    loading,
+    error,
+    createNote,
+    updateNote,
+    deleteNote,
+  } = useNotes()
 
   const { open } = useModal({
     modalRootId: 'ADD_NOTE_MODAL',
@@ -22,7 +29,9 @@ function App(): JSX.Element {
           Add Note
         </button>
       </Navbar>
-      <NoteList {...{ data, loading, error, deleteNote }} />
+      <NoteList
+        {...{ data, loading, error, updateNote, deleteNote }}
+      />
     </StyledPage>
   )
 }

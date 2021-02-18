@@ -1,32 +1,36 @@
 import { h, JSX } from 'preact'
 import { styled } from 'goober'
 
-import ConfirmationModal from '~/modals/ConfirmDeleteNote'
+import DeleteButton from '~/components/DeleteButton'
+import EditModal from '~/modals/EditNote'
 import type { UseNotes, Note } from '~/hooks/useNotes'
 import useModal from '~/hooks/useModal'
 
 export interface NoteComponentProps {
   note: Note
   deleteNote: UseNotes['deleteNote']
+  updateNote: UseNotes['updateNote']
 }
 
 export default function NoteComponent({
   note,
+  updateNote,
   deleteNote,
 }: NoteComponentProps): JSX.Element | null {
-  const modalRootId = 'CONFIRM_DELETE_NOTE_MODAL'
-  const { id, content } = note
+  const modalRootId = 'EDIT_NOTE_MODAL'
 
-  const { open } = useModal({
+  const { open: openEdit } = useModal({
     modalRootId,
     children: (
-      <ConfirmationModal
+      <EditModal
         note={note}
-        deleteNote={deleteNote}
+        updateNote={updateNote}
         modalRootId={modalRootId}
       />
     ),
   })
+
+  const { id, content } = note
 
   const limit = 150
 
@@ -39,8 +43,10 @@ export default function NoteComponent({
     return (
       <StyledNote key={id}>
         {/* TODO : a11y */}
-        <CloseButton onClick={open} />
-        <p>{text}</p>
+        <DeleteButton note={note} deleteNote={deleteNote} />
+        <div className='click-target' onClick={openEdit}>
+          <p>{text}</p>
+        </div>
       </StyledNote>
     )
   }
@@ -55,38 +61,13 @@ const StyledNote = styled('div')`
   height: 14rem;
   background-color: var(--stickynote);
   color: var(--black);
+  .click-target {
+    cursor: pointer;
+    height: calc(100% - 1rem);
+  }
   p {
     margin: 1rem;
     font-family: 'Swanky and Moo Moo';
     font-size: var(--heading_2);
   }
-`
-
-const CloseButton = styled('div')`
-  cursor: pointer;
-  position: absolute;
-  top: 0;
-  right: 0;
-  display: inline-block;
-  width: 0.5rem;
-  height: 0.5rem;
-  border: 7px solid #f56b00;
-  background: linear-gradient(
-      45deg,
-      rgba(0, 0, 0, 0) 0%,
-      rgba(0, 0, 0, 0) 43%,
-      #fff 45%,
-      #fff 55%,
-      rgba(0, 0, 0, 0) 57%,
-      rgba(0, 0, 0, 0) 100%
-    ),
-    linear-gradient(
-      135deg,
-      #f56b00 0%,
-      #f56b00 43%,
-      #fff 45%,
-      #fff 55%,
-      #f56b00 57%,
-      #f56b00 100%
-    );
 `

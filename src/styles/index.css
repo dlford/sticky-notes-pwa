@@ -78,6 +78,7 @@ h6,
 .button,
 button {
   font-family: 'Tienne';
+  margin: 0 0 1rem;
 }
 
 .h1,
