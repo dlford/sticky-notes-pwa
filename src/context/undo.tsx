@@ -5,15 +5,8 @@ import type { Note } from '~/hooks/useNotes'
 
 export interface UndoContextProps {
   state: Note | void
-  dispatch: Reducer<
-    {
-      type: UndoActions
-      payload: UndoContextProps['state']
-    },
-    unknown
-  >
+  dispatch: Reducer<UndoReducer['action'], Note | void>
 }
-// dispatch: (action: UndoReducer['action']): Note | void
 
 export enum UndoActions {
   push = 'PUSH',
@@ -33,7 +26,9 @@ export interface UndoProviderProps {
 
 const initialState = undefined
 
-const reducer = (action: UndoReducer['action']) => {
+function reducer(
+  action: UndoReducer['action'],
+): UndoContextProps['state'] {
   switch (action.type) {
     case UndoActions.push:
       if (!action.payload) {
@@ -49,8 +44,10 @@ const reducer = (action: UndoReducer['action']) => {
 
 export const UndoContext = createContext<UndoContextProps>({
   state: undefined,
-  dispatch: () => {
-    return
+  dispatch: ({ type, payload }) => {
+    // This is a dummy function that will
+    // be replaced by UndoContext.Provider
+    return { type, payload }
   },
 })
 
@@ -58,6 +55,7 @@ export function UndoProvider({
   children,
 }: UndoProviderProps): JSX.Element {
   const [state, dispatch] = useReducer(reducer, undefined)
+
   return (
     <UndoContext.Provider
       value={{
@@ -70,6 +68,7 @@ export function UndoProvider({
   )
 }
 
+/*
 export interface UseUndo {
   undoItem: UndoContextProps['state']
   dispatch(
@@ -86,3 +85,4 @@ export default function useUndo(): UseUndo {
     UndoActions,
   }
 }
+ */
