@@ -1,4 +1,5 @@
-import { h, JSX, Fragment } from 'preact'
+import { h, JSX } from 'preact'
+import { styled } from 'goober'
 
 import type {
   UseNotes,
@@ -28,10 +29,36 @@ export default function ConfirmDeleteNoteModal({
   }
 
   return (
-    <Fragment>
-      <h3>Are you sure?</h3>
-      <button onClick={handleYes}>Yes</button>
-      <button onClick={close}>No</button>
-    </Fragment>
+    <StyledModal>
+      <h1 className='h4'>
+        Are you sure you want to delete this note?
+      </h1>
+      <div className='buttons'>
+        <button className='bad' onClick={handleYes}>
+          Yes
+        </button>
+        <button onClick={close}>No</button>
+      </div>
+    </StyledModal>
   )
 }
+
+const StyledModal = styled('div')`
+  display: flex;
+  flex-direction: column;
+  background-color: var(--primary_200);
+  padding: 2rem;
+  border-radius: 1rem;
+  gap: 2rem;
+  h1 {
+    margin: 0;
+  }
+  .buttons {
+    display: flex;
+    gap: 1rem;
+    margin: 0 auto;
+    button {
+      width: 5rem;
+    }
+  }
+`
