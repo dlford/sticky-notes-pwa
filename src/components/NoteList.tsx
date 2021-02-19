@@ -4,6 +4,8 @@ import { styled } from 'goober'
 import type { UseNotes, Note } from '~/hooks/useNotes'
 import NoteComponent from '~/components/Note'
 
+// TODO : Loader spinner
+
 export interface NoteListComponentProps {
   data: UseNotes['data']
   loading: UseNotes['loading']
