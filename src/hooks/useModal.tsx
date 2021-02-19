@@ -1,8 +1,6 @@
 import { render, JSX } from 'preact'
 import { useState } from 'preact/hooks'
 
-// TODO : Close on click out of
-
 export interface UseModalProps {
   appRootId?: string
   modalRootId?: string
@@ -58,6 +56,14 @@ export default function useModal({
     }
   }
 
+  function handleClickOutside(event: MouseEvent | TouchEvent) {
+    if (event.target instanceof HTMLElement) {
+      if (event.target.contains(modalRoot)) {
+        close()
+      }
+    }
+  }
+
   function open() {
     if (modalRoot && appRoot) {
       if (children) {
@@ -69,6 +75,8 @@ export default function useModal({
       modalRoot.removeAttribute('inert')
       modalRoot.style.display = 'flex'
       window.addEventListener('keydown', handleEscapeKeyPress)
+      window.addEventListener('mousedown', handleClickOutside)
+      window.addEventListener('touchstart', handleClickOutside)
       setIsOpen(true)
       setTimeout(() => {
         if (modalRoot?.style?.opacity) {
@@ -89,6 +97,8 @@ export default function useModal({
           modalRoot.setAttribute('inert', 'true')
           modalRoot.style.display = 'none'
           window.removeEventListener('keydown', handleEscapeKeyPress)
+          window.removeEventListener('mousedown', handleClickOutside)
+          window.removeEventListener('touchstart', handleClickOutside)
           setIsOpen(false)
           render('', modalRoot)
         }
