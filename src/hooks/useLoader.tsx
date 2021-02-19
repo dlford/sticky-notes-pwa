@@ -1,4 +1,3 @@
-import { render, JSX } from 'preact'
 import { useReducer, useEffect } from 'preact/hooks'
 
 export enum LoaderActions {
@@ -13,7 +12,7 @@ enum LoaderStates {
   stopped = 'STOPPED',
 }
 
-const initialState = LoaderStates.running
+const initialState = LoaderStates.stopped
 
 function reducer(
   state: LoaderStates,
@@ -42,12 +41,29 @@ function reducer(
 }
 
 export interface UseLoader {
-  start(): void
-  stop(): void
+  startLoader(): void
+  stopLoader(): void
 }
 
 export default function useLoader(): UseLoader {
   const [state, dispatch] = useReducer(reducer, initialState)
+
+  let loaderRoot = document.getElementById('LOADING_BAR')
+  if (!loaderRoot) {
+    loaderRoot = document.createElement('div')
+    loaderRoot.id = 'LOADING_BAR'
+    loaderRoot.setAttribute('aria-hidden', 'true')
+    loaderRoot.style.position = 'absolute'
+    loaderRoot.style.top = '0'
+    loaderRoot.style.left = '0'
+    loaderRoot.style.width = '100%'
+    loaderRoot.style.height = '3px'
+    loaderRoot.style.backgroundColor = 'black'
+    loaderRoot.style.zIndex = '10'
+    loaderRoot.style.visibility = 'hidden'
+    // TODO : style loader in CSS and add className here
+    document.body.appendChild(loaderRoot)
+  }
 
   useEffect(() => {
     if (state === LoaderStates.starting) {
@@ -58,21 +74,26 @@ export default function useLoader(): UseLoader {
     }
   }, [state])
 
-  function start() {
+  useEffect(() => {
+    if (loaderRoot) {
+      if (state === LoaderStates.running) {
+        loaderRoot.style.visibility = 'visible'
+      } else {
+        loaderRoot.style.visibility = 'hidden'
+      }
+    }
+  }, [state, loaderRoot])
+
+  function startLoader() {
     dispatch(LoaderActions.start)
   }
 
-  function stop() {
+  function stopLoader() {
     dispatch(LoaderActions.stop)
   }
 
-  const loaderRoot = document.createElement('div')
-  loaderRoot.setAttribute('aria-hidden', 'true')
-  // TODO : style loader
-  // TODO : render loader
-
   return {
-    start,
-    stop,
+    startLoader,
+    stopLoader,
   }
 }

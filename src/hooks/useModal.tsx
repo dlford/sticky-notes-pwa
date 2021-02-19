@@ -30,6 +30,7 @@ export default function useModal({
   let modalRoot = document.getElementById(modalRootId)
   if (!modalRoot) {
     modalRoot = document.createElement('div')
+    // TODO : Move styles to css className
     modalRoot.setAttribute('aria-hidden', 'true')
     modalRoot.setAttribute('inert', 'true')
     modalRoot.setAttribute('aria-modal', 'true')

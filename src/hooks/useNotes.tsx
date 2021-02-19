@@ -1,6 +1,10 @@
 import { useState, useEffect, useCallback } from 'preact/hooks'
 import { openDB, IDBPDatabase, DBSchema } from 'idb'
 
+import useLoader from '~/hooks/useLoader'
+
+// TODO : Can we add an event listener for indexedDB changes?
+
 export interface Note {
   id?: number
   content: string
@@ -51,6 +55,8 @@ function sortNotes(notes: Note[]): Note[] {
 }
 
 export default function useNotes(): UseNotes {
+  const { startLoader, stopLoader } = useLoader()
+
   const [db, setDb] = useState<IDBPDatabase<NotesDB> | void>(
     undefined,
   )
@@ -81,6 +87,7 @@ export default function useNotes(): UseNotes {
 
   // Connect to indexedDB on load
   useEffect(() => {
+    startLoader()
     async function setupDb() {
       if (!db && !error.length) {
         try {
@@ -102,7 +109,7 @@ export default function useNotes(): UseNotes {
       }
     }
     setupDb()
-  }, [error, db, getData])
+  }, [error, db, getData, startLoader])
 
   // Fetch data when indexedDB is connected
   useEffect(() => {
@@ -112,6 +119,15 @@ export default function useNotes(): UseNotes {
         .catch(() => setLoading(false))
     }
   }, [db, isDbLoaded, getData])
+
+  // Start/Stop Loader when loading state changes
+  useEffect(() => {
+    if (loading) {
+      startLoader()
+    } else {
+      stopLoader()
+    }
+  }, [loading, startLoader, stopLoader])
 
   async function createNote({
     content,

@@ -4,8 +4,6 @@ import { styled } from 'goober'
 import type { UseNotes, Note } from '~/hooks/useNotes'
 import NoteComponent from '~/components/Note'
 
-// TODO : Loader spinner
-
 export interface NoteListComponentProps {
   data: UseNotes['data']
   loading: UseNotes['loading']
@@ -20,10 +18,12 @@ export default function NoteListComponent({
   error,
   updateNote,
   deleteNote,
-}: NoteListComponentProps): JSX.Element {
+}: NoteListComponentProps): JSX.Element | null {
+  if (loading) return null
+
   return (
     <StyledNoteList>
-      {!loading && !!data?.length ? (
+      {data?.length ? (
         data.map((note: Note) => (
           <NoteComponent
             note={note}
@@ -32,7 +32,9 @@ export default function NoteListComponent({
           />
         ))
       ) : (
-        <p>No notes found...</p>
+        <p>
+          No notes found, click the Add Note button to get started!
+        </p>
       )}
       {loading && <p>Loading...</p>}
       {!!error?.length && <p>{JSON.stringify(error)}</p>}
