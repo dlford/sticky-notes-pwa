@@ -8,10 +8,6 @@ export interface AddNoteModalProps {
   createNote: UseNotes['createNote']
 }
 
-// TODO : Limit length, remove limit from Note component
-// TODO : Close on click out of
-// TODO : Close button
-
 export default function AddNoteModal({
   createNote,
 }: AddNoteModalProps): JSX.Element {

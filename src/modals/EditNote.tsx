@@ -1,5 +1,4 @@
 import { h, JSX } from 'preact'
-import { useState, useEffect } from 'preact/hooks'
 import { styled } from 'goober'
 
 import type { UseNotes, Note } from '~/hooks/useNotes'
@@ -18,13 +17,6 @@ export default function EditNoteModal({
 }: EditNoteModalProps): JSX.Element {
   const { id, content, createdAt } = note
 
-  const [editContent, setEditContent] = useState(content)
-
-  // TODO : Figure out how to clean state on every mount
-  useEffect(() => {
-    setEditContent(content)
-  }, [content, setEditContent])
-
   const { close } = useModal({ modalRootId })
 
   async function handleSave(
@@ -39,21 +31,16 @@ export default function EditNoteModal({
     close()
   }
 
-  function handleCancel() {
-    setEditContent(content)
-    close()
-  }
-
   return (
     <StyledForm method='post' onSubmit={handleSave}>
       <h1 className='h3'>Edit Note</h1>
       <label htmlFor='content'>Note</label>
-      <textarea name='content' value={editContent} />
+      <textarea name='content' value={content} />
       <div className='buttons'>
         <button type='submit' className='primary'>
           Save
         </button>
-        <button type='button' className='bad' onClick={handleCancel}>
+        <button type='button' className='bad' onClick={close}>
           Cancel
         </button>
       </div>

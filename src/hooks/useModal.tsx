@@ -1,6 +1,8 @@
 import { render, JSX } from 'preact'
 import { useState } from 'preact/hooks'
 
+// TODO : Close on click out of
+
 export interface UseModalProps {
   appRootId?: string
   modalRootId?: string
@@ -58,6 +60,9 @@ export default function useModal({
 
   function open() {
     if (modalRoot && appRoot) {
+      if (children) {
+        render(children, modalRoot)
+      }
       appRoot.setAttribute('aria-hidden', 'true')
       appRoot.setAttribute('inert', 'true')
       modalRoot.removeAttribute('aria-hidden')
@@ -85,13 +90,10 @@ export default function useModal({
           modalRoot.style.display = 'none'
           window.removeEventListener('keydown', handleEscapeKeyPress)
           setIsOpen(false)
+          render('', modalRoot)
         }
       }, animationDuration)
     }
-  }
-
-  if (modalRoot && children) {
-    render(children, modalRoot)
   }
 
   return {
