@@ -25,28 +25,17 @@ export default function useModal({
     throw new Error('Inavlid appRootId supplied to useModal')
   }
 
+  // This should match the .modal CSS class
   const animationDuration = 200
 
   let modalRoot = document.getElementById(modalRootId)
   if (!modalRoot) {
     modalRoot = document.createElement('div')
-    // TODO : Move styles to css className
     modalRoot.setAttribute('aria-hidden', 'true')
     modalRoot.setAttribute('inert', 'true')
     modalRoot.setAttribute('aria-modal', 'true')
     modalRoot.id = modalRootId
-    modalRoot.style.display = 'none'
-    modalRoot.style.alignItems = 'center'
-    modalRoot.style.justifyContent = 'center'
-    modalRoot.style.position = 'absolute'
-    modalRoot.style.top = '0'
-    modalRoot.style.left = '0'
-    modalRoot.style.width = '100vw'
-    modalRoot.style.height = '100vh'
-    modalRoot.style.zIndex = '9'
-    modalRoot.style.backgroundColor = 'rgba(0,0,0,45%)'
-    modalRoot.style.opacity = '0'
-    modalRoot.style.transition = `opacity ease-in-out ${animationDuration}ms`
+    modalRoot.classList.add('modal')
     document.body.appendChild(modalRoot)
   }
 
@@ -74,29 +63,23 @@ export default function useModal({
       appRoot.setAttribute('inert', 'true')
       modalRoot.removeAttribute('aria-hidden')
       modalRoot.removeAttribute('inert')
-      modalRoot.style.display = 'flex'
       window.addEventListener('keydown', handleEscapeKeyPress)
       window.addEventListener('mousedown', handleClickOutside)
       window.addEventListener('touchstart', handleClickOutside)
       setIsOpen(true)
-      setTimeout(() => {
-        if (modalRoot?.style?.opacity) {
-          modalRoot.style.opacity = '1'
-        }
-      }, 1)
+      modalRoot.classList.add('active')
     }
   }
 
   function close() {
     if (modalRoot && appRoot) {
-      modalRoot.style.opacity = '0'
+      modalRoot.classList.remove('active')
       setTimeout(() => {
         if (modalRoot) {
           appRoot.removeAttribute('aria-hidden')
           appRoot.removeAttribute('inert')
           modalRoot.setAttribute('aria-hidden', 'true')
           modalRoot.setAttribute('inert', 'true')
-          modalRoot.style.display = 'none'
           window.removeEventListener('keydown', handleEscapeKeyPress)
           window.removeEventListener('mousedown', handleClickOutside)
           window.removeEventListener('touchstart', handleClickOutside)

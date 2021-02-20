@@ -3,8 +3,6 @@ import { openDB, IDBPDatabase, DBSchema } from 'idb'
 
 import useLoader from '~/hooks/useLoader'
 
-// TODO : Can we add an event listener for indexedDB changes?
-
 export interface Note {
   id?: number
   content: string
