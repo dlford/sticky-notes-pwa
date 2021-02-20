@@ -1,14 +1,18 @@
 import { useReducer, useEffect } from 'preact/hooks'
 
+// TODO : Tracker loader width in state, jump to 100 on stopping, then hide before resetting to 0
+
 export enum LoaderActions {
   start = 'START',
   stop = 'STOP',
   run = 'RUN',
+  kill = 'KILL',
 }
 
 enum LoaderStates {
   starting = 'STARTING',
   running = 'RUNNING',
+  stopping = 'STOPPING',
   stopped = 'STOPPED',
 }
 
@@ -34,7 +38,19 @@ function reducer(
           return state
       }
     case LoaderActions.stop:
-      return LoaderStates.stopped
+      switch (state) {
+        case LoaderStates.running:
+          return LoaderStates.stopping
+        default:
+          return LoaderStates.stopped
+      }
+    case LoaderActions.kill:
+      switch (state) {
+        case LoaderStates.stopping:
+          return state
+        default:
+          return LoaderStates.stopped
+      }
     default:
       throw new Error('Unknown action type')
   }
@@ -53,15 +69,7 @@ export default function useLoader(): UseLoader {
     loaderRoot = document.createElement('div')
     loaderRoot.id = 'LOADING_BAR'
     loaderRoot.setAttribute('aria-hidden', 'true')
-    loaderRoot.style.position = 'absolute'
-    loaderRoot.style.top = '0'
-    loaderRoot.style.left = '0'
-    loaderRoot.style.width = '100%'
-    loaderRoot.style.height = '3px'
-    loaderRoot.style.backgroundColor = 'black'
-    loaderRoot.style.zIndex = '10'
-    loaderRoot.style.visibility = 'hidden'
-    // TODO : style loader in CSS and add className here
+    loaderRoot.classList.add('loader')
     document.body.appendChild(loaderRoot)
   }
 
@@ -75,12 +83,31 @@ export default function useLoader(): UseLoader {
   }, [state])
 
   useEffect(() => {
+    if (state === LoaderStates.stopping) {
+      const delayedStop = setTimeout(() => {
+        dispatch(LoaderActions.kill)
+      }, 250)
+      return () => clearTimeout(delayedStop)
+    }
+  }, [state])
+
+  useEffect(() => {
     if (loaderRoot) {
-      if (state === LoaderStates.running) {
-        loaderRoot.style.visibility = 'visible'
-      } else {
-        loaderRoot.style.visibility = 'hidden'
+      if (
+        state === LoaderStates.running ||
+        state === LoaderStates.stopping
+      ) {
+        let i = 5
+        const loadingInterval = setInterval(() => {
+          if (loaderRoot?.style?.width) {
+            loaderRoot.style.width = `${i}`
+            i++
+          }
+        }, 100)
+        return clearInterval(loadingInterval)
       }
+
+      loaderRoot.style.width = '0'
     }
   }, [state, loaderRoot])
 

@@ -204,3 +204,14 @@ button.bad:focus {
 .modal.active {
   opacity: 1;
 }
+
+.loader {
+  position: absolute;
+  top: 0px;
+  left: 0;
+  width: 0;
+  height: 3px;
+  background-color: var(--white);
+  z-index: 3;
+  transition: width ease-in-out 250ms;
+}
