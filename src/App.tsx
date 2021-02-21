@@ -8,7 +8,7 @@ import NoteList from '~/components/NoteList'
 import useLoader from '~/hooks/useLoader'
 
 function App(): JSX.Element {
-  const { startLoader } = useLoader()
+  const { startLoader, stopLoader } = useLoader()
 
   const {
     data,
@@ -32,6 +32,7 @@ function App(): JSX.Element {
           Add Note
         </button>
         <button onClick={startLoader}>Start loader</button>
+        <button onClick={stopLoader}>Stop loader</button>
       </Navbar>
       <NoteList
         {...{ data, loading, error, updateNote, deleteNote }}
