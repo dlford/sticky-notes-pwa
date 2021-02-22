@@ -1,6 +1,13 @@
 import { useReducer, useEffect } from 'preact/hooks'
 
-// TODO : Track loader width in state, jump to 100 on stopping, then hide before resetting to 0
+let loaderRoot = document.getElementById('LOADING_BAR')
+if (!loaderRoot) {
+  loaderRoot = document.createElement('div')
+  loaderRoot.id = 'LOADING_BAR'
+  loaderRoot.setAttribute('aria-hidden', 'true')
+  loaderRoot.classList.add('loader')
+  document.body.appendChild(loaderRoot)
+}
 
 export enum LoaderActions {
   start = 'START',
@@ -42,7 +49,7 @@ function reducer(
     case LoaderActions.run:
       switch (state.status) {
         case LoaderStatus.starting:
-          return { progress: 5, status: LoaderStatus.running }
+          return { progress: 3, status: LoaderStatus.running }
         default:
           return state
       }
@@ -63,7 +70,10 @@ function reducer(
           return state
       }
     case LoaderActions.step:
-      return { ...state, progress: state.progress + 1 }
+      if (state.progress < 100) {
+        return { ...state, progress: state.progress + 1 }
+      }
+      return state
     default:
       throw new Error('Unknown action type')
   }
@@ -77,18 +87,10 @@ export interface UseLoader {
 export default function useLoader(): UseLoader {
   const [state, dispatch] = useReducer(reducer, initialState)
 
-  let loaderRoot = document.getElementById('LOADING_BAR')
-  if (!loaderRoot) {
-    loaderRoot = document.createElement('div')
-    loaderRoot.id = 'LOADING_BAR'
-    loaderRoot.setAttribute('aria-hidden', 'true')
-    loaderRoot.classList.add('loader')
-    document.body.appendChild(loaderRoot)
-  }
-
   useEffect(() => {
     if (state.status === LoaderStatus.starting) {
       const delayedStart = setTimeout(() => {
+        loaderRoot ? (loaderRoot.style.height = '3px') : null
         dispatch(LoaderActions.run)
       }, 250)
       return () => clearTimeout(delayedStart)
@@ -98,6 +100,7 @@ export default function useLoader(): UseLoader {
   useEffect(() => {
     if (state.status === LoaderStatus.stopping) {
       const delayedStop = setTimeout(() => {
+        loaderRoot ? (loaderRoot.style.height = '0') : null
         dispatch(LoaderActions.kill)
       }, 500)
       return () => clearTimeout(delayedStop)
@@ -105,10 +108,15 @@ export default function useLoader(): UseLoader {
   }, [state.status])
 
   useEffect(() => {
-    if (state.status === LoaderStatus.running) {
-      setTimeout(() => {
+    if (
+      state.status === LoaderStatus.running &&
+      state.progress < 100
+    ) {
+      loaderRoot ? (loaderRoot.style.height = '3px') : null
+      const stepTimout = setTimeout(() => {
         dispatch(LoaderActions.step)
       }, 1000)
+      return () => clearTimeout(stepTimout)
     }
   }, [state])
 
@@ -116,7 +124,7 @@ export default function useLoader(): UseLoader {
     if (loaderRoot) {
       loaderRoot.style.width = `${state.progress}%`
     }
-  }, [state.progress, loaderRoot])
+  }, [state.progress])
 
   function startLoader() {
     dispatch(LoaderActions.start)

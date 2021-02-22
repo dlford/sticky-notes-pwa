@@ -5,11 +5,8 @@ import useNotes from '~/hooks/useNotes'
 import AddNote from '~/modals/AddNote'
 import useModal from '~/hooks/useModal'
 import NoteList from '~/components/NoteList'
-import useLoader from '~/hooks/useLoader'
 
 function App(): JSX.Element {
-  const { startLoader, stopLoader } = useLoader()
-
   const {
     data,
     loading,
@@ -31,8 +28,6 @@ function App(): JSX.Element {
         <button className='primary' onClick={open}>
           Add Note
         </button>
-        <button onClick={startLoader}>Start loader</button>
-        <button onClick={stopLoader}>Stop loader</button>
       </Navbar>
       <NoteList
         {...{ data, loading, error, updateNote, deleteNote }}

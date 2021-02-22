@@ -207,10 +207,12 @@ button.bad:focus {
 
 .loader {
   position: absolute;
+  max-width: 100vw;
+  box-shadow: 1px 1px 5px rgba(255, 255, 255, 35%);
   top: 0px;
   left: 0;
   width: 0;
-  height: 3px;
+  height: 0;
   background-color: var(--white);
   z-index: 3;
   transition: width ease-in-out 250ms;
