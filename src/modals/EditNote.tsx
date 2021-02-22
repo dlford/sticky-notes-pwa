@@ -64,7 +64,7 @@ const StyledForm = styled('form')`
     max-width: 80vw;
     max-height: 80vh;
     background-color: var(--stickynote);
-    font-family: 'Swanky and Moo Moo';
+    font-family: var(--swanky_and_moo_moo);
     font-size: var(--heading_2);
     padding: 0.5rem;
     margin-bottom: 2rem;

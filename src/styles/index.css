@@ -45,6 +45,12 @@ body {
   --gray_400: var(--grey_400);
   --gray_500: var(--grey_500);
   --stickynote: #feff9c;
+  --tienne: Tienne, Garamond, Baskerville, 'Baskerville Old Face',
+    'Hoefler Text', 'Times New Roman', serif;
+  --rhodium_libre: 'Rhodium Libre', TimesNewRoman, 'Times New Roman',
+    Times, Baskerville, Georgia, serif;
+  --swanky_and_moo_moo: 'Swanky and Moo Moo', 'Brush Script MT',
+    cursive, Papyrus, fantasy, sans-serif;
 
   width: 100vw;
   height: 100vh;
@@ -55,8 +61,7 @@ body {
   background-color: var(--primary_300);
   color: var(--white);
   font-size: var(--baseFontSize);
-  font-family: 'Rhodium Libre';
-  /* TODO : Font stacks */
+  font-family: var(--rhodium_libre);
 }
 
 nav {
@@ -77,7 +82,7 @@ h5,
 h6,
 .button,
 button {
-  font-family: 'Tienne';
+  font-family: var(--tienne);
   margin: 0 0 1rem;
 }
 

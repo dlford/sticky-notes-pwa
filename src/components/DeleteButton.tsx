@@ -26,7 +26,19 @@ export default function DeleteButtonComponent({
     ),
   })
 
-  return <StyledDeleteButton onClick={openDelete} />
+  return (
+    <StyledDeleteButton
+      tabIndex={0}
+      aria-role='button'
+      aria-label='Delete Note'
+      onClick={openDelete}
+      onKeyDown={(event: KeyboardEvent) => {
+        if (event.key === 'Enter') {
+          openDelete()
+        }
+      }}
+    />
+  )
 }
 
 const StyledDeleteButton = styled('div')`

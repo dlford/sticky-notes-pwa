@@ -42,9 +42,19 @@ export default function NoteComponent({
   if (id) {
     return (
       <StyledNote key={id}>
-        {/* TODO : a11y */}
         <DeleteButton note={note} deleteNote={deleteNote} />
-        <div className='click-target' onClick={openEdit}>
+        <div
+          className='click-target'
+          onClick={openEdit}
+          tabIndex={0}
+          aria-role='button'
+          aria-label='Edit Note'
+          onKeyDown={(event: KeyboardEvent) => {
+            if (event.key === 'Enter') {
+              openEdit()
+            }
+          }}
+        >
           <p>{text}</p>
         </div>
       </StyledNote>
@@ -67,7 +77,7 @@ const StyledNote = styled('div')`
   }
   p {
     margin: 1rem;
-    font-family: 'Swanky and Moo Moo';
+    font-family: var(--swanky_and_moo_moo);
     font-size: var(--heading_2);
   }
 `

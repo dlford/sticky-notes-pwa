@@ -63,7 +63,7 @@ const StyledModal = styled('div')`
     width: 18rem;
     height: 14rem;
     background-color: var(--stickynote);
-    font-family: 'Swanky and Moo Moo';
+    font-family: var(--swanky_and_moo_moo);
     font-size: var(--heading_2);
     padding: 0.5rem;
   }
