@@ -1,0 +1,224 @@
+body {
+  --baseFontSize: 1rem;
+  --baseNavSize: 0.64rem;
+  --smallFontSize: 0.8rem;
+  --smallestFontSize: 0.512rem;
+  --heading_1: 1.953rem;
+  --heading_2: 1.563rem;
+  --heading_3: 1.25rem;
+  --heading_4: var(--baseFontSize);
+  --heading_5: var(--smallFontSize);
+  --heading_6: 0.64rem;
+  --heading_7: var(--smallestFontSize);
+  --display: 2.441rem;
+  --big_display: 3.052rem;
+  --white: #eef;
+  --black: #011;
+  --primary_100: #50557e;
+  --primary_200: #373b62;
+  --primary_300: #232750;
+  --primary_400: #13173b;
+  --primary_500: #070925;
+  --accent_100: #aed9ec;
+  --accent_200: #7ab9d5;
+  --accent_300: #519bbb;
+  --accent_400: #327fa0;
+  --accent_500: #176e94;
+  --green_100: #e3fae6;
+  --green_200: #b9eebf;
+  --green_300: #8cdc96;
+  --green_400: #62c66e;
+  --green_500: #3da84a;
+  --red_100: #ffc9c9;
+  --red_200: #ff9e9e;
+  --red_300: #ff7979;
+  --red_400: #f95656;
+  --red_500: #de2f2f;
+  --grey_100: #f6f9fd;
+  --grey_200: #dee5ef;
+  --grey_300: #73839c;
+  --grey_400: #293854;
+  --grey_500: #112138;
+  --gray_100: var(--grey_100);
+  --gray_200: var(--grey_200);
+  --gray_300: var(--grey_300);
+  --gray_400: var(--grey_400);
+  --gray_500: var(--grey_500);
+  --stickynote: #feff9c;
+  --tienne: Tienne, Garamond, Baskerville, 'Baskerville Old Face',
+    'Hoefler Text', 'Times New Roman', serif;
+  --rhodium_libre: 'Rhodium Libre', TimesNewRoman, 'Times New Roman',
+    Times, Baskerville, Georgia, serif;
+  --swanky_and_moo_moo: 'Swanky and Moo Moo', 'Brush Script MT',
+    cursive, Papyrus, fantasy, sans-serif;
+
+  width: 100vw;
+  height: 100vh;
+  max-width: 100%;
+  max-height: 100%;
+  margin: 0;
+  padding: 0;
+  background-color: var(--primary_300);
+  color: var(--white);
+  font-size: var(--baseFontSize);
+  font-family: var(--rhodium_libre);
+}
+
+nav {
+  font-size: var(--baseNavSize);
+}
+
+.h1,
+h1,
+.h2,
+h2,
+.h3,
+h3,
+.h4,
+h4,
+.h5,
+h5,
+.h6,
+h6,
+.button,
+button {
+  font-family: var(--tienne);
+  margin: 0 0 1rem;
+}
+
+.h1,
+h1 {
+  font-size: var(--heading_1);
+}
+
+.h2,
+h2 {
+  font-size: var(--heading_2);
+}
+
+.h3,
+h3 {
+  font-size: var(--heading_3);
+}
+
+.h4,
+h4 {
+  font-size: var(--heading_4);
+}
+
+.h5,
+h5 {
+  font-size: var(--heading_5);
+}
+
+.h6,
+h6 {
+  font-size: var(--heading_6);
+}
+
+.p,
+p {
+  font-size: var(--baseFontSize);
+}
+
+.small,
+small {
+  font-size: var(--smallFontSize);
+}
+
+.tiny {
+  font-size: var(--smallestFontSize);
+}
+
+.display {
+  font-size: var(--dislpay);
+}
+
+.big_display {
+  font-size: var(--big_display);
+}
+
+.button,
+button {
+  background-color: var(--accent_500);
+  color: var(--grey_100);
+  border: none;
+  border-radius: 0.25rem;
+  padding: 0.5rem 0.6rem 0.6rem;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 0.1rem;
+  cursor: pointer;
+  transition: color 300ms ease-in-out,
+    background-color 50ms ease-in-out;
+}
+
+.button:hover,
+.button:active,
+.button:focus,
+button:hover,
+button:active,
+button:focus {
+  background-color: var(--accent_400);
+  color: var(--grey_500);
+}
+
+.button.primary,
+button.primary {
+  background-color: var(--green_500);
+}
+
+.button.primary:hover,
+.button.primary:active,
+.button.primary:focus,
+button.primary:hover,
+button.primary:active,
+button.primary:focus {
+  background-color: var(--green_400);
+}
+
+.button.bad,
+button.bad {
+  background-color: var(--red_500);
+}
+
+.button.bad:hover,
+.button.bad:active,
+.button.bad:focus,
+button.bad:hover,
+button.bad:active,
+button.bad:focus {
+  background-color: var(--red_400);
+}
+
+.modal {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 9;
+  background-color: rgba(0, 0, 0, 45%);
+  opacity: 0;
+  transition: opacity ease-in-out 250ms;
+}
+
+.modal.active {
+  opacity: 1;
+}
+
+.loader {
+  position: absolute;
+  max-width: 100vw;
+  box-shadow: 1px 1px 5px rgba(255, 255, 255, 35%);
+  top: 0px;
+  left: 0;
+  width: 0;
+  height: 0;
+  background-color: var(--white);
+  z-index: 3;
+  transition: width ease-in-out 250ms;
+}

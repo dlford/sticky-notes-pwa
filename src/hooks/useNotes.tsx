@@ -1,22 +1,21 @@
 import { useState, useEffect, useCallback } from 'preact/hooks'
 import { openDB, IDBPDatabase, DBSchema } from 'idb'
 
+import useLoader from '~/hooks/useLoader'
+
 export interface Note {
   id?: number
-  title: string
   content: string
   updatedAt: Date
   createdAt: Date
 }
 
 export interface CreateNoteInput {
-  title: Note['title']
   content: Note['content']
 }
 
 export interface UpdateNoteInput {
   id: Note['id']
-  title: Note['title']
   content: Note['content']
   createdAt: Note['createdAt']
 }
@@ -54,6 +53,8 @@ function sortNotes(notes: Note[]): Note[] {
 }
 
 export default function useNotes(): UseNotes {
+  const { startLoader, stopLoader } = useLoader()
+
   const [db, setDb] = useState<IDBPDatabase<NotesDB> | void>(
     undefined,
   )
@@ -84,6 +85,7 @@ export default function useNotes(): UseNotes {
 
   // Connect to indexedDB on load
   useEffect(() => {
+    startLoader()
     async function setupDb() {
       if (!db && !error.length) {
         try {
@@ -105,7 +107,7 @@ export default function useNotes(): UseNotes {
       }
     }
     setupDb()
-  }, [error, db, getData])
+  }, [error, db, getData, startLoader])
 
   // Fetch data when indexedDB is connected
   useEffect(() => {
@@ -116,8 +118,16 @@ export default function useNotes(): UseNotes {
     }
   }, [db, isDbLoaded, getData])
 
+  // Start/Stop Loader when loading state changes
+  useEffect(() => {
+    if (loading) {
+      startLoader()
+    } else {
+      stopLoader()
+    }
+  }, [loading, startLoader, stopLoader])
+
   async function createNote({
-    title,
     content,
   }: CreateNoteInput): Promise<boolean> {
     if (!db || !isDbLoaded) {
@@ -131,7 +141,6 @@ export default function useNotes(): UseNotes {
     const store = tx.objectStore(tableName)
     const updatedAt = new Date(Date.now())
     const idString = await store.put({
-      title,
       content,
       updatedAt,
       createdAt: updatedAt,
@@ -147,7 +156,6 @@ export default function useNotes(): UseNotes {
 
     const newNote: Note = {
       id,
-      title,
       content,
       updatedAt,
       createdAt: updatedAt,
@@ -163,7 +171,6 @@ export default function useNotes(): UseNotes {
 
   async function updateNote({
     id,
-    title,
     content,
     createdAt,
   }: UpdateNoteInput): Promise<boolean> {
@@ -179,7 +186,6 @@ export default function useNotes(): UseNotes {
     const updatedAt = new Date(Date.now())
     const idString = await store.put({
       id,
-      title,
       content,
       updatedAt,
       createdAt,
@@ -199,7 +205,6 @@ export default function useNotes(): UseNotes {
           if (note.id === id) {
             return {
               id,
-              title,
               content,
               updatedAt,
               createdAt,

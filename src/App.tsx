@@ -1,54 +1,51 @@
 import { h, JSX } from 'preact'
+import { styled } from 'goober'
+
 import useNotes from '~/hooks/useNotes'
+import AddNote from '~/modals/AddNote'
+import useModal from '~/hooks/useModal'
+import NoteList from '~/components/NoteList'
 
 function App(): JSX.Element {
-  const { loading, data, error, createNote, deleteNote } = useNotes()
+  const {
+    data,
+    loading,
+    error,
+    createNote,
+    updateNote,
+    deleteNote,
+  } = useNotes()
 
-  function handleAddNote(
-    event: JSX.TargetedEvent<HTMLFormElement, Event>,
-  ) {
-    event.preventDefault()
-
-    const formData = new FormData(event.currentTarget)
-    const title = formData.get('title') as string
-    const content = formData.get('content') as string
-
-    createNote({
-      title,
-      content,
-    })
-
-    event.currentTarget.reset()
-  }
+  const { open } = useModal({
+    modalRootId: 'ADD_NOTE_MODAL',
+    children: <AddNote createNote={createNote} />,
+  })
 
   return (
-    <div className='App'>
-      {loading && <p>Loading...</p>}
-      <form action='post' onSubmit={handleAddNote}>
-        <label htmlFor='title'>Title</label>
-        <input type='text' name='title' />
-        <label htmlFor='content'>Content</label>
-        <input type='text' name='content' />
-        <button type='submit'>Add Note</button>
-      </form>
-      {!loading && !!data?.length ? (
-        data.map((note) => (
-          <div key={note.id}>
-            <h5>{note.title}</h5>
-            <p>{note.content}</p>
-            <button
-              onClick={() => deleteNote({ id: note.id as number })}
-            >
-              Delete
-            </button>
-          </div>
-        ))
-      ) : (
-        <p>No notes found...</p>
-      )}
-      {!!error?.length && <p>{JSON.stringify(error)}</p>}
-    </div>
+    <StyledPage className='App'>
+      <Navbar>
+        <h1 className='h3'>Sticky Notes</h1>
+        <button className='primary' onClick={open}>
+          Add Note
+        </button>
+      </Navbar>
+      <NoteList
+        {...{ data, loading, error, updateNote, deleteNote }}
+      />
+    </StyledPage>
   )
 }
 
 export default App
+
+const StyledPage = styled('main')`
+  max-width: 60rem;
+  margin: 0 auto;
+  padding: 1rem;
+`
+
+const Navbar = styled('nav')`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+`
