@@ -1,11 +1,7 @@
 import { h, JSX } from 'preact'
 import { styled } from 'goober'
 
-import type {
-  UseNotes,
-  Note,
-  DeleteNoteInput,
-} from '~/hooks/useNotes'
+import type { UseNotes, Note } from '~/hooks/useNotes'
 import useModal from '~/hooks/useModal'
 
 export interface DeleteNoteModalProps {
@@ -31,7 +27,7 @@ export default function DeleteNoteModal({
 
   async function handleYes() {
     if (id) {
-      await deleteNote({ id } as DeleteNoteInput)
+      await deleteNote({ id })
     }
     close()
   }

@@ -36,7 +36,7 @@ export interface UseNotes {
 
 interface NotesDB extends DBSchema {
   notes: {
-    key: string
+    key: number
     value: Note
   }
 }
@@ -140,13 +140,11 @@ export default function useNotes(): UseNotes {
     const tx = db.transaction(tableName, 'readwrite')
     const store = tx.objectStore(tableName)
     const updatedAt = new Date(Date.now())
-    const idString = await store.put({
+    const id = await store.put({
       content,
       updatedAt,
       createdAt: updatedAt,
     })
-
-    const id = parseInt(idString, 10)
 
     if (!id || isNaN(id)) {
       const message = 'createNote error: Failed to insert note'
@@ -184,14 +182,12 @@ export default function useNotes(): UseNotes {
     const tx = db.transaction(tableName, 'readwrite')
     const store = tx.objectStore(tableName)
     const updatedAt = new Date(Date.now())
-    const idString = await store.put({
+    const resultId = await store.put({
       id,
       content,
       updatedAt,
       createdAt,
     })
-
-    const resultId = parseInt(idString, 10)
 
     if (!resultId || resultId !== id) {
       const message = 'updateNote error: Failed to update note'
@@ -231,7 +227,7 @@ export default function useNotes(): UseNotes {
     setLoading(true)
     const tx = db.transaction(tableName, 'readwrite')
     const store = tx.objectStore(tableName)
-    await store.delete(IDBKeyRange.only(id))
+    await store.delete(id)
 
     setData((prev) => {
       return sortNotes(prev.filter((note) => note.id !== id))
