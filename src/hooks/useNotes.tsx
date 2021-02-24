@@ -106,7 +106,9 @@ export default function useNotes(): UseNotes {
         }
       }
     }
-    setupDb()
+    if (!db) {
+      setupDb()
+    }
   }, [error, db, getData, startLoader])
 
   // Fetch data when indexedDB is connected
