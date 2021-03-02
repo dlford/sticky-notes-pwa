@@ -1,28 +1,17 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 import { h } from 'preact'
 import { setup } from 'goober'
 import { render } from '@testing-library/preact'
 import userEvent from '@testing-library/user-event'
-import chai, { expect } from 'chai'
-import spies from 'chai-spies'
+import { expect } from 'chai'
 
 import Note from './Note'
 
 setup(h)
-chai.use(spies)
 
-const dummyFunctions = {
-  updateNote: () => {
-    return
-  },
-  deleteNote: () => {
-    return
-  },
-}
-
-// We aren't checking these in this test, but they are being
-// spied on to suppress type checking of these functions.
-const updateNote = chai.spy.on(dummyFunctions, 'updateNote')
-const deleteNote = chai.spy.on(dummyFunctions, 'deleteNote')
+const updateNote: any = {}
+const deleteNote: any = {}
 
 beforeEach(() => {
   let rootElement = document.getElementById('root')
@@ -32,6 +21,15 @@ beforeEach(() => {
     document.body.appendChild(rootElement)
   }
   rootElement.removeAttribute('inert')
+
+  const updateModal = document.getElementById('EDIT_NOTE_MODAL')
+  const deleteModal = document.getElementById('DELETE_NOTE_MODAL')
+  if (updateModal) {
+    updateModal.setAttribute('inert', 'true')
+  }
+  if (deleteModal) {
+    deleteModal.setAttribute('inert', 'true')
+  }
 })
 
 describe('<Note>', () => {
@@ -97,7 +95,6 @@ describe('<Note>', () => {
     )
 
     const deleteNoteButton = getByLabelText('Delete Note')
-    expect(deleteNote).to.have.not.been.called()
 
     const deleteNoteModal = document.getElementById(
       'DELETE_NOTE_MODAL',
@@ -114,7 +111,7 @@ describe('<Note>', () => {
     expect(rootElement?.getAttribute('inert')).to.equal('true')
   })
 
-  it('opens updateNote modal when delete button is clicked', () => {
+  it('opens updateNote modal when update button is clicked', () => {
     const dummyNote = {
       id: 1,
       content: 'I am a note',
@@ -131,7 +128,6 @@ describe('<Note>', () => {
     )
 
     const updateNoteButton = getByLabelText('Edit Note')
-    expect(updateNote).to.have.not.been.called()
 
     const updateNoteModal = document.getElementById('EDIT_NOTE_MODAL')
     const rootElement = document.getElementById('root')
@@ -146,8 +142,7 @@ describe('<Note>', () => {
     expect(rootElement?.getAttribute('inert')).to.equal('true')
   })
 
-  /*
-  it('opens deleteNote modal when enter key pressed on delete button', () => {
+  it('opens deleteNote modal when enter key is pressed on delete button', () => {
     const dummyNote = {
       id: 1,
       content: 'I am a note',
@@ -164,7 +159,6 @@ describe('<Note>', () => {
     )
 
     const deleteNoteButton = getByLabelText('Delete Note')
-    expect(deleteNote).to.have.not.been.called()
 
     const deleteNoteModal = document.getElementById(
       'DELETE_NOTE_MODAL',
@@ -181,7 +175,7 @@ describe('<Note>', () => {
     expect(rootElement?.getAttribute('inert')).to.equal('true')
   })
 
-  it('opens updateNote modal when enter key pressed on delete button', () => {
+  it('opens updateNote modal when enter key is pressed on update button', () => {
     const dummyNote = {
       id: 1,
       content: 'I am a note',
@@ -198,7 +192,6 @@ describe('<Note>', () => {
     )
 
     const updateNoteButton = getByLabelText('Edit Note')
-    expect(updateNote).to.have.not.been.called()
 
     const updateNoteModal = document.getElementById('EDIT_NOTE_MODAL')
     const rootElement = document.getElementById('root')
@@ -212,7 +205,4 @@ describe('<Note>', () => {
     )
     expect(rootElement?.getAttribute('inert')).to.equal('true')
   })
-   */
-
-  // TODO : check keyboard access
 })
