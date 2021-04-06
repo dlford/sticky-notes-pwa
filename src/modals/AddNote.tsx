@@ -33,7 +33,7 @@ export default function AddNoteModal({
     <StyledForm action='post' onSubmit={handleAddNote}>
       <h1 className='h3'>Add Note</h1>
       <label htmlFor='content'>New Note</label>
-      <textarea name='content' />
+      <textarea name='content' id='content' />
       <div className='buttons'>
         <button className='primary' type='submit'>
           Save
